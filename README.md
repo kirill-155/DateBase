@@ -24,3 +24,11 @@
   1.2 По имеющейся ER-модели создать реляционную модель данных
   <img alt="Реляционная модель" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реляционная%20модель.png">
 </h3>
+
+# <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab2
+[Назад](#content)
+<h3>
+  <a href="#client"></a>
+  2 Создать реляционную БД на учебном сервере БД
+</h3>
+
