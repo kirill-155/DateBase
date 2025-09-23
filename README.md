@@ -32,3 +32,69 @@
   2 Создать реляционную БД на учебном сервере БД
 </h3>
 
+2.1 создать таблицы, определить первичные ключи и иные ограничения
+- Книги
+<img alt="Реализация в MSSQL таблицы Книги" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Книги.png">
+
+- Издательства
+<img alt="Реализация в MSSQL таблицы Издательства" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Издательства.png">
+
+- Авторы
+<img alt="Реализация в MSSQL таблицы Авторы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Авторы.png">
+
+- Список авторов
+<img alt="Реализация в MSSQL таблицы Список авторов" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Список авторов.png">
+
+- Темы
+<img alt="Реализация в MSSQL таблицы Темы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Темы.png">
+
+- Список тем
+<img alt="Реализация в MSSQL таблицы Список тем" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Список тем.png">
+
+- Читатели
+<img alt="Реализация в MSSQL таблицы Читатели" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Читатели.png">
+
+- Группы
+<img alt="Реализация в MSSQL таблицы Группы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Группы.png">
+
+- Выдача книг
+<img alt="Реализация в MSSQL таблицы Выдача книг" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Выдача книг.png">
+
+2.2 создать диаграмму
+<img alt="Реализация в MSSQL Диаграмма" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Диаграмма.png">
+
+2.3 заполнить все таблицы адекватной информацией
+- Книги
+<img alt="Заполнение в MSSQL таблицы Книги" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Книги.png">
+
+- Издательства
+<img alt="Заполнение в MSSQL таблицы Издательства" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Издательства.png">
+
+- Авторы
+<img alt="Заполнение в MSSQL таблицы Авторы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Авторы.png">
+
+- Список авторов
+<img alt="Заполнение в MSSQL таблицы Список авторов" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Список авторов.png">
+
+- Темы
+<img alt="Заполнение в MSSQL таблицы Темы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Темы.png">
+
+- Список тем
+<img alt="Заполнение в MSSQL таблицы Список тем" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Список тем.png">
+
+- Читатели
+<img alt="Заполнение в MSSQL таблицы Читатели" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Читатели.png">
+
+- Группы
+<img alt="Заполнение в MSSQL таблицы Группы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Группы.png">
+
+- Выдача книг
+<img alt="Заполнение в MSSQL таблицы Выдача книг" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Заполнение/Выдача книг.png">
+
+# <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab3
+[Назад](#content)
+<h3>
+  <a href="#client"></a>
+  3
+</h3>
+
