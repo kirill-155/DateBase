@@ -34,10 +34,8 @@
 </h3>
 
 2.1 создать таблицы, определить первичные ключи и иные ограничения
+```
 USE [Library]
-GO
-
-DROP TABLE IF EXISTS [dbo].[Авторы]
 GO
 
 CREATE TABLE Авторы(
@@ -46,38 +44,22 @@ CREATE TABLE Авторы(
 	Фамилия nvarchar(50),
 	Имя nvarchar(50),
 	Отчество nvarchar(50) NULL
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Темы]
-GO
+);
 
 CREATE TABLE Темы(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Название nvarchar(50) NOT NULL
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Издательства]
-GO
+);
 
 CREATE TABLE Издательства(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Название nvarchar(50) NOT NULL
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Группы]
-GO
+);
 
 CREATE TABLE Группы(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Название nvarchar(50) NOT NULL
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Читатели]
-GO
+);
 
 CREATE TABLE Читатели(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -86,31 +68,19 @@ CREATE TABLE Читатели(
 	Отчество nvarchar(50),
 	Задолженность int,
 	Id_группы int NOT NULL FOREIGN KEY REFERENCES Группы(Id)
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Список тем]
-GO
+);
 
 CREATE TABLE Список_тем(
 	Id_темы int NOT NULL FOREIGN KEY REFERENCES Темы(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
 	PRIMARY KEY (Id_темы, Id_книги)
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Список авторов]
-GO
+);
 
 CREATE TABLE Список_авторов(
 	Id_автора int NOT NULL FOREIGN KEY REFERENCES Авторы(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
 	PRIMARY KEY (Id_автора, Id_книги)
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Книги]
-GO
+);
 
 CREATE TABLE Книги(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -119,11 +89,7 @@ CREATE TABLE Книги(
 	Год_издания date NOT NULL,
 	Число_экземпляров int NOT NULL,
 	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
-)
-GO
-
-DROP TABLE IF EXISTS [dbo].[Выдача книг]
-GO
+);
 
 CREATE TABLE Выдача_книг(
 	Id_читателя int NOT NULL FOREIGN KEY REFERENCES Читатели(Id),
@@ -134,13 +100,13 @@ CREATE TABLE Выдача_книг(
 	Дата_фактической_сдачи date,
 	Штраф int,
 	PRIMARY KEY (Id_читателя, Id_книги)
-)
-GO
-
+);
+```
 2.2 создать диаграмму
 <img alt="Реализация в MSSQL Диаграмма" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Диаграмма.png">
 
 2.3 заполнить все таблицы адекватной информацией
+```
 SET IDENTITY_INSERT Авторы ON
 GO
 
@@ -161,7 +127,8 @@ GO
 
 SET IDENTITY_INSERT Авторы OFF
 GO
-
+```
+```
 SET IDENTITY_INSERT Темы ON
 GO
 
@@ -189,7 +156,8 @@ GO
 
 SET IDENTITY_INSERT Темы OFF
 GO
-
+```
+```
 SET IDENTITY_INSERT Издательства ON
 GO
 
@@ -223,7 +191,8 @@ GO
 
 SET IDENTITY_INSERT Издательства OFF
 GO
-
+```
+```
 SET IDENTITY_INSERT Группы ON
 GO
 
@@ -243,7 +212,8 @@ GO
 
 SET IDENTITY_INSERT Группы OFF
 GO
-
+```
+```
 SET IDENTITY_INSERT Читатели ON
 GO
 
@@ -297,7 +267,8 @@ GO
 
 SET IDENTITY_INSERT Читатели OFF
 GO
-
+```
+```
 INSERT INTO Список_тем (Id_темы, Id_книги) VALUES
 (1, 2),
 (1, 4),
@@ -319,7 +290,8 @@ INSERT INTO Список_тем (Id_темы, Id_книги) VALUES
 (18, 11)
 
 GO
-
+```
+```
 INSERT INTO Список_авторов (Id_автора, Id_книги) VALUES
 (1, 7),
 (2, 8),
@@ -336,7 +308,8 @@ INSERT INTO Список_авторов (Id_автора, Id_книги) VALUES
 (11, 17)
 
 GO
-
+```
+```
 SET IDENTITY_INSERT Книги ON
 GO
 
@@ -359,7 +332,8 @@ GO
 
 SET IDENTITY_INSERT Книги OFF
 GO
-
+```
+```
 INSERT INTO Выдача_книг (Id_читателя, Id_книги, Количество, Дата_выдачи, Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф) VALUES
 (1, 2, 1, CAST(N'2025-10-10' AS Date), CAST(N'2025-10-11' AS Date), NULL, NULL),
 (15, 4, 1, CAST(N'2025-01-09' AS Date), CAST(N'2025-01-10' AS Date), NULL, NULL),
@@ -375,7 +349,7 @@ INSERT INTO Выдача_книг (Id_читателя, Id_книги, Коли�
 (73, 12, 1, CAST(N'2025-09-14' AS Date), CAST(N'2025-10-14' AS Date), NULL, NULL)
 
 GO
-
+```
 # <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab3
 [Назад](#content)
 <h3>
