@@ -35,13 +35,13 @@
 
 2.1 создать таблицы, определить первичные ключи и иные ограничения
 - Книги
-<img alt="Реализация в MSSQL таблицы Книги" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Книги.png">
+<img alt="Реализация в MSSQL таблицы Книги" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Книги.sql">
 
 - Издательства
-<img alt="Реализация в MSSQL таблицы Издательства" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Издательства.png">
+<img alt="Реализация в MSSQL таблицы Издательства" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Издательства.sql">
 
 - Авторы
-<img alt="Реализация в MSSQL таблицы Авторы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Авторы.png">
+<img alt="Реализация в MSSQL таблицы Авторы" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Авторы.sql">
 
 - Список авторов
 <img alt="Реализация в MSSQL таблицы Список авторов" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Реализация в MSSQL/Список авторов.png">
