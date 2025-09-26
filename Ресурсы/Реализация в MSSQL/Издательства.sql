@@ -1,0 +1,45 @@
+USE [Library]
+GO
+
+DROP TABLE IF EXISTS [dbo].[Издательства]
+GO
+
+CREATE TABLE Издательства(
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Название nvarchar(50) NOT NULL
+)
+GO
+
+SET IDENTITY_INSERT Издательства ON
+GO
+
+INSERT INTO Издательства (Id, Название) VALUES
+(1, N'Литрес: Самиздат'),
+(2, N'Книга по Требованию'),
+(3, N'Эксмо'),
+(4, N'АCТ'),
+(5, N'LAP LAMBERT Academic Publishing'),
+(6, N'HarperCollins Publishers'),
+(7, N'Просвещение'),
+(8, N'Феникс'),
+(9, N'ЛитРес: чтец'),
+(10, N'Детская литература'),
+(11, N'Юрайт'),
+(12, N'Наука'),
+(13, N'Художественная литература'),
+(14, N'Проспект'),
+(15, N'Вече'),
+(16, N'Центрполиграф'),
+(17, N'Рипол Классик'),
+(18, N'КноРус'),
+(19, N'Директ-Медиа'),
+(20, N'Азбука'),
+(21, N'Питер'),
+(22, N'Penguin Books'),
+(23, N'Дрофа'),
+(24, N'Харвест')
+
+GO
+
+SET IDENTITY_INSERT Издательства OFF
+GO

@@ -1,0 +1,35 @@
+USE [Library]
+GO
+
+DROP TABLE IF EXISTS [dbo].[Авторы]
+GO
+
+CREATE TABLE Авторы(
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Псевдоним nvarchar(50) NOT NULL,
+	Фамилия nvarchar(50),
+	Имя nvarchar(50),
+	Отчество nvarchar(50) NULL
+)
+GO
+
+SET IDENTITY_INSERT Авторы ON
+GO
+
+INSERT INTO Авторы (Id, Псевдоним, Фамилия, Имя, Отчество) VALUES
+(1, N'Ascold Flow', N'Мельник', N'Андрей', NULL),
+(2, N'Макс Крынов', N'Крынов', N'Максим', NULL),
+(3, N'Никита Красавин', N'Красавин', N'Никита', NULL),
+(4, N'Артем Сластин', N'Сластин', N'Артем', NULL),
+(5, N'Олег Свиридов', N'Свиридов', N'Олег', NULL),
+(6, N'Арсений Смирнов', N'Смирнов', N'Арсений', NULL),
+(7, N'Ник Тарасов', N'Тарасов', N'Ник', NULL),
+(8, N'Жгулев Петр', N'Жгулев', N'Петр', NULL),
+(9, N'Андрей Рымин', N'Рымин', N'Андрей', NULL),
+(10, N'Морфиус', NULL, NULL, NULL),
+(11, N'Грильяж', NULL, NULL, NULL)
+
+GO
+
+SET IDENTITY_INSERT Авторы OFF
+GO
