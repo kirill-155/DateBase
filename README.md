@@ -34,8 +34,7 @@
 </h3>
 
 2.1 создать таблицы, определить первичные ключи и иные ограничения
-```
-USE [Library]
+```USE [Library]
 GO
 
 CREATE TABLE Авторы(
@@ -70,6 +69,15 @@ CREATE TABLE Читатели(
 	Id_группы int NOT NULL FOREIGN KEY REFERENCES Группы(Id)
 );
 
+CREATE TABLE Книги(
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Название nvarchar(50) NOT NULL,
+	Цена money CHECK (Цена >= 0) NOT NULL,
+	Год_издания date NOT NULL,
+	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
+	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
+);
+
 CREATE TABLE Список_тем(
 	Id_темы int NOT NULL FOREIGN KEY REFERENCES Темы(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
@@ -82,23 +90,14 @@ CREATE TABLE Список_авторов(
 	PRIMARY KEY (Id_автора, Id_книги)
 );
 
-CREATE TABLE Книги(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Название nvarchar(50) NOT NULL,
-	Цена money CHECK (Цена >= 0) NOT NULL,
-	Год_издания date NOT NULL,
-	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
-	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
-);
-
 CREATE TABLE Выдача_книг(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Id_читателя int NOT NULL FOREIGN KEY REFERENCES Читатели(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
 	Количество int CHECK (Количество >= 0) NOT NULL,
 	Дата_выдачи date NOT NULL,
-	Дата_предполагаемой_сдачи date CHECK (Дата_предполагаемой_сдачи >= Дата_выдачи) NOT NULL,
-	Дата_фактической_сдачи date CHECK (Дата_фактической_сдачи >= Дата_выдачи),
+	Дата_предполагаемой_сдачи date NOT NULL,
+	Дата_фактической_сдачи date,
 	Штраф money CHECK (Штраф >= 0)
 );
 ```
@@ -334,20 +333,26 @@ SET IDENTITY_INSERT Книги OFF
 GO
 ```
 ```
-INSERT INTO Выдача_книг (Id_читателя, Id_книги, Количество, Дата_выдачи, Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф) VALUES
-(1, 2, 1, CAST(N'2025-10-10' AS Date), CAST(N'2025-10-11' AS Date), NULL, NULL),
-(15, 4, 1, CAST(N'2025-01-09' AS Date), CAST(N'2025-01-10' AS Date), NULL, NULL),
-(16, 7, 1, CAST(N'2025-09-09' AS Date), CAST(N'2025-10-09' AS Date), NULL, NULL),
-(23, 14, 1, CAST(N'2025-09-16' AS Date), CAST(N'2025-10-16' AS Date), NULL, NULL),
-(27, 9, 1, CAST(N'2025-09-11' AS Date), CAST(N'2025-10-11' AS Date), NULL, NULL),
-(44, 13, 1, CAST(N'2025-09-15' AS Date), CAST(N'2025-10-15' AS Date), NULL, NULL),
-(45, 8, 1, CAST(N'2025-09-10' AS Date), CAST(N'2025-10-10' AS Date), NULL, NULL),
-(45, 16, 1, CAST(N'2025-09-18' AS Date), CAST(N'2025-10-18' AS Date), NULL, NULL),
-(55, 15, 1, CAST(N'2025-09-17' AS Date), CAST(N'2025-10-17' AS Date), NULL, NULL),
-(59, 10, 1, CAST(N'2025-09-12' AS Date), CAST(N'2025-10-12' AS Date), NULL, NULL),
-(60, 11, 1, CAST(N'2025-09-13' AS Date), CAST(N'2025-10-13' AS Date), NULL, NULL),
-(73, 12, 1, CAST(N'2025-09-14' AS Date), CAST(N'2025-10-14' AS Date), NULL, NULL)
+SET IDENTITY_INSERT Читатели ON
+GO
 
+INSERT INTO Выдача_книг (Id, Id_читателя, Id_книги, Количество, Дата_выдачи, Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф) VALUES
+(1, 1, 2, 1, CAST(N'2025-10-10' AS Date), CAST(N'2025-10-11' AS Date), NULL, NULL),
+(2, 15, 4, 1, CAST(N'2025-01-09' AS Date), CAST(N'2025-01-10' AS Date), NULL, NULL),
+(3, 16, 7, 1, CAST(N'2025-09-09' AS Date), CAST(N'2025-10-09' AS Date), NULL, NULL),
+(4, 23, 14, 1, CAST(N'2025-09-16' AS Date), CAST(N'2025-10-16' AS Date), NULL, NULL),
+(5, 27, 9, 1, CAST(N'2025-09-11' AS Date), CAST(N'2025-10-11' AS Date), NULL, NULL),
+(6, 44, 13, 1, CAST(N'2025-09-15' AS Date), CAST(N'2025-10-15' AS Date), NULL, NULL),
+(7, 45, 8, 1, CAST(N'2025-09-10' AS Date), CAST(N'2025-10-10' AS Date), NULL, NULL),
+(8, 45, 16, 1, CAST(N'2025-09-18' AS Date), CAST(N'2025-10-18' AS Date), NULL, NULL),
+(9, 55, 15, 1, CAST(N'2025-09-17' AS Date), CAST(N'2025-10-17' AS Date), NULL, NULL),
+(10, 59, 10, 1, CAST(N'2025-09-12' AS Date), CAST(N'2025-10-12' AS Date), NULL, NULL),
+(11, 60, 11, 1, CAST(N'2025-09-13' AS Date), CAST(N'2025-10-13' AS Date), NULL, NULL),
+(12, 73, 12, 1, CAST(N'2025-09-14' AS Date), CAST(N'2025-10-14' AS Date), NULL, NULL)
+
+GO
+
+SET IDENTITY_INSERT Читатели OFF
 GO
 ```
 # <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab3
