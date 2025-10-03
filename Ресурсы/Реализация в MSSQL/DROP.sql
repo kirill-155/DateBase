@@ -1,16 +1,16 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Выдача книг]
+DROP TABLE IF EXISTS [dbo].[Выдача_книг]
+GO
+
+DROP TABLE IF EXISTS [dbo].[Список_авторов]
+GO
+
+DROP TABLE IF EXISTS [dbo].[Список_тем]
 GO
 
 DROP TABLE IF EXISTS [dbo].[Книги]
-GO
-
-DROP TABLE IF EXISTS [dbo].[Список авторов]
-GO
-
-DROP TABLE IF EXISTS [dbo].[Список тем]
 GO
 
 DROP TABLE IF EXISTS [dbo].[Читатели]
