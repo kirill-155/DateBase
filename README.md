@@ -34,8 +34,7 @@
 </h3>
 
 2.1 создать таблицы, определить первичные ключи и иные ограничения
-```
-USE [Library]
+```USE [Library]
 GO
 
 CREATE TABLE Авторы(
@@ -70,6 +69,15 @@ CREATE TABLE Читатели(
 	Id_группы int NOT NULL FOREIGN KEY REFERENCES Группы(Id)
 );
 
+CREATE TABLE Книги(
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Название nvarchar(50) NOT NULL,
+	Цена money CHECK (Цена >= 0) NOT NULL,
+	Год_издания date NOT NULL,
+	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
+	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
+);
+
 CREATE TABLE Список_тем(
 	Id_темы int NOT NULL FOREIGN KEY REFERENCES Темы(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
@@ -80,15 +88,6 @@ CREATE TABLE Список_авторов(
 	Id_автора int NOT NULL FOREIGN KEY REFERENCES Авторы(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
 	PRIMARY KEY (Id_автора, Id_книги)
-);
-
-CREATE TABLE Книги(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Название nvarchar(50) NOT NULL,
-	Цена money CHECK (Цена >= 0) NOT NULL,
-	Год_издания date NOT NULL,
-	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
-	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
 );
 
 CREATE TABLE Выдача_книг(
