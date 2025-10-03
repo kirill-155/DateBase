@@ -173,10 +173,10 @@
         <mxCell id="zH_n4sFcQTCAPx2PAFEm-63" value="ID" style="ellipse;whiteSpace=wrap;html=1;fontStyle=4" parent="1" vertex="1">
           <mxGeometry x="1095" y="120" width="100" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="zH_n4sFcQTCAPx2PAFEm-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="zH_n4sFcQTCAPx2PAFEm-64" target="zH_n4sFcQTCAPx2PAFEm-50" edge="1">
+        <mxCell id="zH_n4sFcQTCAPx2PAFEm-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" source="zH_n4sFcQTCAPx2PAFEm-64" target="zH_n4sFcQTCAPx2PAFEm-50" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="zH_n4sFcQTCAPx2PAFEm-64" value="псевдоним" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="zH_n4sFcQTCAPx2PAFEm-64" value="псевдоним" style="ellipse;whiteSpace=wrap;html=1;dashed=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=default;" parent="1" vertex="1">
           <mxGeometry x="1095" y="260" width="100" height="60" as="geometry" />
         </mxCell>
         <mxCell id="zH_n4sFcQTCAPx2PAFEm-67" value="Издательства" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -302,13 +302,13 @@
         <mxCell id="zH_n4sFcQTCAPx2PAFEm-110" value="INT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="610" y="670" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="zH_n4sFcQTCAPx2PAFEm-111" value="INT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="zH_n4sFcQTCAPx2PAFEm-111" value="MONEY" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="845" y="690" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="zH_n4sFcQTCAPx2PAFEm-112" value="INT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="1285" y="600" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="zH_n4sFcQTCAPx2PAFEm-113" value="INT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="zH_n4sFcQTCAPx2PAFEm-113" value="MONEY" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="1145" y="530" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="zH_n4sFcQTCAPx2PAFEm-114" value="STR" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
