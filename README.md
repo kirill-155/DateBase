@@ -96,8 +96,8 @@ CREATE TABLE Выдача_книг(
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
 	Количество int CHECK (Количество >= 0) NOT NULL,
 	Дата_выдачи date NOT NULL,
-	Дата_предполагаемой_сдачи date CHECK (Дата_предполагаемой_сдачи >= Дата_выдачи) NOT NULL,
-	Дата_фактической_сдачи date CHECK (Дата_фактической_сдачи >= Дата_выдачи),
+	Дата_предполагаемой_сдачи date NOT NULL,
+	Дата_фактической_сдачи date,
 	Штраф money CHECK (Штраф >= 0)
 );
 ```
