@@ -1,19 +1,6 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Читатели]
-GO
-
-CREATE TABLE Читатели(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Фамилия nvarchar(50) NOT NULL,
-	Имя nvarchar(50) NOT NULL,
-	Отчество nvarchar(50),
-	Задолженность int,
-	Id_группы int NOT NULL FOREIGN KEY REFERENCES Группы(Id)
-)
-GO
-
 SET IDENTITY_INSERT Читатели ON
 GO
 

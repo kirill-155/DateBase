@@ -1,18 +1,6 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Авторы]
-GO
-
-CREATE TABLE Авторы(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Псевдоним nvarchar(50) NOT NULL,
-	Фамилия nvarchar(50),
-	Имя nvarchar(50),
-	Отчество nvarchar(50) NULL
-)
-GO
-
 SET IDENTITY_INSERT Авторы ON
 GO
 

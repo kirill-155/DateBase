@@ -1,15 +1,6 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Темы]
-GO
-
-CREATE TABLE Темы(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Название nvarchar(50) NOT NULL
-)
-GO
-
 SET IDENTITY_INSERT Темы ON
 GO
 

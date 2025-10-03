@@ -1,16 +1,6 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Список тем]
-GO
-
-CREATE TABLE Список_тем(
-	Id_темы int NOT NULL FOREIGN KEY REFERENCES Темы(Id),
-	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
-	PRIMARY KEY (Id_темы, Id_книги)
-)
-GO
-
 INSERT INTO Список_тем (Id_темы, Id_книги) VALUES
 (1, 2),
 (1, 4),

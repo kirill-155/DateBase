@@ -1,19 +1,6 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Книги]
-GO
-
-CREATE TABLE Книги(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Название nvarchar(50) NOT NULL,
-	Цена int NOT NULL,
-	Год_издания date NOT NULL,
-	Число_экземпляров int NOT NULL,
-	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
-)
-GO
-
 SET IDENTITY_INSERT Книги ON
 GO
 

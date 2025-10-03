@@ -1,15 +1,6 @@
 USE [Library]
 GO
 
-DROP TABLE IF EXISTS [dbo].[Группы]
-GO
-
-CREATE TABLE Группы(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Название nvarchar(50) NOT NULL
-)
-GO
-
 SET IDENTITY_INSERT Группы ON
 GO
 
