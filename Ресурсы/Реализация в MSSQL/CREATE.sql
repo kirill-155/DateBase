@@ -33,6 +33,15 @@ CREATE TABLE Читатели(
 	Id_группы int NOT NULL FOREIGN KEY REFERENCES Группы(Id)
 );
 
+CREATE TABLE Книги(
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Название nvarchar(50) NOT NULL,
+	Цена money CHECK (Цена >= 0) NOT NULL,
+	Год_издания date NOT NULL,
+	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
+	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
+);
+
 CREATE TABLE Список_тем(
 	Id_темы int NOT NULL FOREIGN KEY REFERENCES Темы(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
@@ -45,22 +54,13 @@ CREATE TABLE Список_авторов(
 	PRIMARY KEY (Id_автора, Id_книги)
 );
 
-CREATE TABLE Книги(
-	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Название nvarchar(50) NOT NULL,
-	Цена money CHECK (Цена >= 0) NOT NULL,
-	Год_издания date NOT NULL,
-	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
-	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
-);
-
 CREATE TABLE Выдача_книг(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Id_читателя int NOT NULL FOREIGN KEY REFERENCES Читатели(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
 	Количество int CHECK (Количество >= 0) NOT NULL,
 	Дата_выдачи date NOT NULL,
-	Дата_предполагаемой_сдачи date CHECK (Дата_предполагаемой_сдачи >= Дата_выдачи) NOT NULL,
-	Дата_фактической_сдачи date CHECK (Дата_фактической_сдачи >= Дата_выдачи),
+	Дата_предполагаемой_сдачи date NOT NULL,
+	Дата_фактической_сдачи date,
 	Штраф money CHECK (Штраф >= 0)
 );
