@@ -1,4 +1,5 @@
-USE [Library]
+--USE [Library]
+USE [2025_PMI_32]
 GO
 
 SET IDENTITY_INSERT Темы ON

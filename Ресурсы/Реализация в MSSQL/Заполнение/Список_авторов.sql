@@ -1,4 +1,5 @@
-USE [Library]
+--USE [Library]
+USE [2025_PMI_32]
 GO
 
 INSERT INTO Список_авторов (Id_автора, Id_книги) VALUES
