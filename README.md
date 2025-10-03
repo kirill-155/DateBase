@@ -40,10 +40,10 @@ GO
 
 CREATE TABLE Авторы(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	Псевдоним nvarchar(50) NOT NULL,
+	Псевдоним nvarchar(50),
 	Фамилия nvarchar(50),
 	Имя nvarchar(50),
-	Отчество nvarchar(50) NULL
+	Отчество nvarchar(50)
 );
 
 CREATE TABLE Темы(
@@ -66,7 +66,7 @@ CREATE TABLE Читатели(
 	Фамилия nvarchar(50) NOT NULL,
 	Имя nvarchar(50) NOT NULL,
 	Отчество nvarchar(50),
-	Задолженность int,
+	Задолженность money CHECK (Задолженность >= 0),
 	Id_группы int NOT NULL FOREIGN KEY REFERENCES Группы(Id)
 );
 
@@ -85,21 +85,21 @@ CREATE TABLE Список_авторов(
 CREATE TABLE Книги(
 	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Название nvarchar(50) NOT NULL,
-	Цена int NOT NULL,
+	Цена money CHECK (Цена >= 0) NOT NULL,
 	Год_издания date NOT NULL,
-	Число_экземпляров int NOT NULL,
+	Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL,
 	Id_издательства int NOT NULL FOREIGN KEY REFERENCES Издательства(Id)
 );
 
 CREATE TABLE Выдача_книг(
+	Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	Id_читателя int NOT NULL FOREIGN KEY REFERENCES Читатели(Id),
 	Id_книги int NOT NULL FOREIGN KEY REFERENCES Книги(Id),
-	Количество int NOT NULL,
+	Количество int CHECK (Количество >= 0) NOT NULL,
 	Дата_выдачи date NOT NULL,
-	Дата_предполагаемой_сдачи date NOT NULL,
-	Дата_фактической_сдачи date,
-	Штраф int,
-	PRIMARY KEY (Id_читателя, Id_книги)
+	Дата_предполагаемой_сдачи date CHECK (Дата_предполагаемой_сдачи >= Дата_выдачи) NOT NULL,
+	Дата_фактической_сдачи date CHECK (Дата_фактической_сдачи >= Дата_выдачи),
+	Штраф money CHECK (Штраф >= 0)
 );
 ```
 2.2 создать диаграмму
