@@ -360,6 +360,6 @@ GO
 [Назад](#content)
 <h3>
   <a href="#client"></a>
-  [3](https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Лабораторная%203.docx)
+  (https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Лабораторная%203.docx)
 </h3>
 
