@@ -2,7 +2,7 @@
 USE [2025_PMI_32]
 GO
 
-SET IDENTITY_INSERT Читатели ON
+SET IDENTITY_INSERT Выдача_книг ON
 GO
 
 INSERT INTO Выдача_книг (Id, Id_читателя, Id_книги, Количество, Дата_выдачи, Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф) VALUES
@@ -21,5 +21,5 @@ INSERT INTO Выдача_книг (Id, Id_читателя, Id_книги, Количество, Дата_выдачи, Дат
 
 GO
 
-SET IDENTITY_INSERT Читатели OFF
+SET IDENTITY_INSERT Выдача_книг OFF
 GO
