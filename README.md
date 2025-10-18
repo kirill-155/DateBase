@@ -334,7 +334,7 @@ SET IDENTITY_INSERT Книги OFF
 GO
 ```
 ```
-SET IDENTITY_INSERT Читатели ON
+SET IDENTITY_INSERT Выдача_книг ON
 GO
 
 INSERT INTO Выдача_книг (Id, Id_читателя, Id_книги, Количество, Дата_выдачи, Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф) VALUES
@@ -353,7 +353,7 @@ INSERT INTO Выдача_книг (Id, Id_читателя, Id_книги, Ко�
 
 GO
 
-SET IDENTITY_INSERT Читатели OFF
+SET IDENTITY_INSERT Выдача_книг OFF
 GO
 ```
 # <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab3
