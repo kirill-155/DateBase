@@ -577,9 +577,8 @@ BEGIN
         H.Id, H.Фамилия
     ORDER BY 
         SUM(VK.Количество) DESC
-END</code></pre>
-		</details>
-	</li>
+END</code></pre></details>
+</li>
 	<li>
 		<details>
 			<summary><strong>Процедура</strong>, которая ищет день с наибольшим количеством взятых книг и выдает фамилию читателя, взявшего наибольшее количество книг в этот день (с использованием вызова предыдущей процедуры)</summary> 
@@ -608,9 +607,8 @@ BEGIN
         (SELECT SUM(Количество) 
          FROM Выдача_книг 
          WHERE Дата_выдачи = @Дата_макс) AS Всего_книг_взято
-END</code></pre>
-		</details>
-	</li>
+END</code></pre></details>
+</li>
 </ol>
 
 ### Пользовательские функции
@@ -686,9 +684,8 @@ RETURN
     WHERE 
         (@Id_темы IS NULL OR ST.Id_темы = @Id_темы)
         AND (@Id_автора IS NULL OR SA.Id_автора = @Id_автора)
-GO</code></pre>
-		</details>
-	</li> 
+GO</code></pre></details>
+</li> 
 	<li>
 		<details>
 			<summary><strong>Multi-statement-функция</strong>, возвращающая список должников по группам с упорядочением по количеству несданных вовремя книг</summary> 
@@ -728,9 +725,8 @@ BEGIN
         Общая_просрочка_дней DESC
     
     RETURN
-END</code></pre>
-		</details>
-	</li> 
+END</code></pre></details>
+</li> 
 </ol>
 
 ### Триггеры
@@ -801,10 +797,8 @@ BEGIN
         ROLLBACK TRANSACTION
     END
 END
-GO
-</code></pre>
-		</details>
-	</li> 
+GO</code></pre></details>
+</li> 
 	<li>
 		<details>
 			<summary><strong>Замещающий триггер</strong> на операцию удаления читателя – если у него на руках находятся несданные книги, то выдается соответствующее сообщение, и читатель не удаляется</summary> 
@@ -839,9 +833,8 @@ BEGIN
         PRINT 'Читатель успешно удален.'
     END
 END
-GO</code></pre>
-		</details>
-	</li> 
+GO</code></pre></details>
+</li> 
 </ol>
 <blockquote> 
 	<p><strong>Обязательно предусмотреть обработку НЕСКОЛЬКИХ записей!</strong> (там, где необходимо, использовать КУРСОР!)</p> 
