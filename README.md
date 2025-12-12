@@ -848,5 +848,5 @@ GO</code></pre>
 </blockquote>
 
 <h3>
-  <a href="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Лабораторная%204.docx" target="_blank">Запросы лабораторной 4</a>
+  <a href="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Лабораторная%204.docx" target="_blank">Запросы лабораторной 4 (со скринами)</a>
 </h3>
