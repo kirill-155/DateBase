@@ -729,45 +729,64 @@ END</code></pre></details>
 	<li>
 		<details>
 			<summary><strong>Триггер любого типа</strong> на добавление новой книги к списку взятых книг – если читатель является должником, то книга не добавляется (т.е., не выдается этому читателю)</summary> 
-<pre><code>CREATE TRIGGER ПроверкаДолжникаНаВыдачу
+<pre><code>CREATE OR ALTER TRIGGER ПроверкаДолжникаНаВыдачу
 ON Выдача_книг
 INSTEAD OF INSERT
 AS
-BEGIN
+BEGIN 
     IF EXISTS (-- является ли читатель должником
         SELECT 1 
         FROM Читатели H
-            JOIN inserted I ON H.Id = I.Id_читателя
+        JOIN inserted I ON H.Id = I.Id_читателя
         WHERE Задолженность > 0
     ) OR EXISTS (-- есть ли у читателя просроченные книги
         SELECT 1 
         FROM Выдача_книг VK
-            JOIN inserted I ON VK.Id_читателя = I.Id_читателя
+        JOIN inserted I ON VK.Id_читателя = I.Id_читателя
         WHERE VK.Дата_фактической_сдачи IS NULL
         AND VK.Дата_предполагаемой_сдачи < GETDATE()
     )
     BEGIN
-        RAISERROR('У читателя есть просроченные книги или долг. Выдача новой книги невозможна.', 16, 1)
-        RETURN
+        DECLARE @Должники TABLE (
+            Id_читателя INT,
+            Причина NVARCHAR(100)
+        );
+        INSERT INTO @Должники
+        SELECT DISTINCT
+            I.Id_читателя,
+            CASE 
+                WHEN H.Задолженность > 0 THEN 'Имеет задолженность'
+                ELSE 'Имеет просроченные книги'
+            END
+        FROM inserted I
+        JOIN Читатели H ON I.Id_читателя = H.Id
+        WHERE H.Задолженность > 0 
+            OR EXISTS (
+                SELECT 1 
+                FROM Выдача_книг VK
+                WHERE VK.Id_читателя = I.Id_читателя
+                AND VK.Дата_фактической_сдачи IS NULL
+                AND VK.Дата_предполагаемой_сдачи < GETDATE()
+            );
+        DECLARE @Сообщение NVARCHAR(MAX) = 'Книги не выданы' + CHAR(13) + CHAR(10);
+        SELECT @Сообщение = @Сообщение + 
+            'Читатель ID ' + CAST(D.Id_читателя AS NVARCHAR) + ': ' + D.Причина + CHAR(13) + CHAR(10)
+        FROM @Должники D;
+        RAISERROR(@Сообщение, 16, 1);
+        RETURN;
     END
-     DECLARE @Id_читателя INT, @Id_книги INT, @Количество INT, 
-            @Дата_выдачи DATE, @Дата_предполагаемой_сдачи DATE,
-            @Дата_фактической_сдачи DATE, @Штраф MONEY
-    SELECT 
-        @Id_читателя = Id_читателя,
-        @Id_книги = Id_книги,
-        @Количество = Количество,
-        @Дата_выдачи = Дата_выдачи,
-        @Дата_предполагаемой_сдачи = Дата_предполагаемой_сдачи,
-        @Дата_фактической_сдачи = Дата_фактической_сдачи,
-        @Штраф = Штраф
-    FROM inserted
     INSERT INTO Выдача_книг 
     (Id_читателя, Id_книги, Количество, Дата_выдачи, 
      Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф)
-    VALUES
-    (@Id_читателя, @Id_книги, @Количество, @Дата_выдачи,
-     @Дата_предполагаемой_сдачи, @Дата_фактической_сдачи, @Штраф)
+    SELECT 
+        Id_читателя,
+        Id_книги,
+        Количество,
+        Дата_выдачи,
+        Дата_предполагаемой_сдачи,
+        Дата_фактической_сдачи,
+        Штраф
+    FROM inserted;
 END
 GO</code></pre>
 		</details>
@@ -791,30 +810,61 @@ GO</code></pre></details>
 	<li>
 		<details>
 			<summary><strong>Замещающий триггер</strong> на операцию удаления читателя – если у него на руках находятся несданные книги, то выдается соответствующее сообщение, и читатель не удаляется</summary> 
-<pre><code>CREATE TRIGGER ПроверкаКнигПередУдалениемЧитателя
+<pre><code>CREATE OR ALTER TRIGGER ПроверкаКнигПередУдалениемЧитателя
 ON Читатели
 INSTEAD OF DELETE
 AS
 BEGIN
-    DECLARE @Id_читателя INT
-    DECLARE @Количество_несданных_книг INT
-    SELECT @Id_читателя = Id FROM deleted
-    SELECT @Количество_несданных_книг = COUNT(*)
-    FROM Выдача_книг
-    WHERE Id_читателя = @Id_читателя
-    AND Дата_фактической_сдачи IS NULL
-    IF @Количество_несданных_книг > 0
+    DECLARE @ЧитателиСКнигами TABLE (
+        Id_читателя INT,
+        Фамилия NVARCHAR(50),
+        Имя NVARCHAR(50),
+        КоличествоНесданныхКниг INT,
+        СписокКниг NVARCHAR(MAX)
+    );
+    INSERT INTO @ЧитателиСКнигами
+    SELECT 
+        D.Id,
+        D.Фамилия,
+        D.Имя,
+        COUNT(VK.Id) AS КоличествоНесданныхКниг,
+        STRING_AGG(K.Название, ', ') WITHIN GROUP (ORDER BY K.Название) AS СписокКниг
+    FROM deleted D
+    LEFT JOIN Выдача_книг VK ON D.Id = VK.Id_читателя
+    LEFT JOIN Книги K ON VK.Id_книги = K.Id
+    WHERE VK.Дата_фактической_сдачи IS NULL
+    GROUP BY D.Id, D.Фамилия, D.Имя
+    HAVING COUNT(VK.Id) > 0;
+    IF EXISTS (SELECT 1 FROM @ЧитателиСКнигами)
     BEGIN
-        DECLARE @Сообщение NVARCHAR(500)
-        SET @Сообщение = 'Читатель имеет ' + CAST(@Количество_несданных_книг AS NVARCHAR) + 
-                        ' несданных книг. Удаление невозможно.'
-        RAISERROR(@Сообщение, 16, 1)
+        DECLARE @Сообщение NVARCHAR(MAX) = 'Не удалось удалить следующих читателей:' + CHAR(13) + CHAR(10);
+        SELECT @Сообщение = @Сообщение + 
+            'Читатель: ' + Фамилия + ' ' + Имя + 
+            ' (ID: ' + CAST(Id_читателя AS NVARCHAR) + ')' +
+            ', Несданных книг: ' + CAST(КоличествоНесданныхКниг AS NVARCHAR) +
+            ISNULL(', Книги: ' + СписокКниг, '') + CHAR(13) + CHAR(10)
+        FROM @ЧитателиСКнигами;
+        SET @Сообщение = @Сообщение + 'Удаление невозможно.';
+        RAISERROR(@Сообщение, 16, 1);
     END
-    ELSE
+    DECLARE @УдаляемыеЧитатели TABLE (Id INT);
+    INSERT INTO @УдаляемыеЧитатели
+    SELECT D.Id
+    FROM deleted D
+    WHERE NOT EXISTS (
+        SELECT 1 
+        FROM @ЧитателиСКнигами C 
+        WHERE C.Id_читателя = D.Id
+    );
+    DELETE FROM Выдача_книг 
+    WHERE Id_читателя IN (SELECT Id FROM @УдаляемыеЧитатели);
+    DELETE FROM Читатели 
+    WHERE Id IN (SELECT Id FROM @УдаляемыеЧитатели);
+    DECLARE @Удалено INT;
+    SELECT @Удалено = COUNT(*) FROM @УдаляемыеЧитатели;
+    IF @Удалено > 0
     BEGIN
-        DELETE FROM Выдача_книг WHERE Id_читателя = @Id_читателя
-        DELETE FROM Читатели WHERE Id = @Id_читателя
-        PRINT 'Читатель успешно удален.'
+        PRINT 'Успешно удалено: ' + CAST(@Удалено AS NVARCHAR);
     END
 END
 GO</code></pre></details>
