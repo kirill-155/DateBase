@@ -8,7 +8,6 @@
   <a href="#-lab6"><img alt="lab6" src="https://img.shields.io/badge/Lab6-orange"></a> 
   <a href="#-lab7"><img alt="lab7" src="https://img.shields.io/badge/Lab7-brown"></a>
   <a href="#-lab8"><img alt="lab8" src="https://img.shields.io/badge/Lab8-purple"></a>
-  <a href="#-lab9"><img alt="lab9" src="https://img.shields.io/badge/Lab9-violet"></a> 
 </p>
 
 Вихарев Кирилл, ПМИ-32БО, вариант №1
@@ -882,6 +881,188 @@ GO</code></pre></details>
 [Назад](#content)
 
 ## Лабораторная №5
+### Создание ролей и присвоение им прав на объекты БД
+**Задание 1.**
+
+Для БД, созданной в Лаб.раб. 1-2, создать 2 роли. 
+
+1-я роль должна иметь доступ к таблицам, хр. процедурам и др. объектам БД, требующийся для руководителя фирмы (зав. библиотекой, столовой, дет.садом, поликлиникой, ...) (т.е., ему д.б. разрешено просматривать конфиденциальную информацию, удалять, исправлять какие-то сведения, выполнять процедуры и функции). Некоторые права необходимо предоставить с возможностью дальнейшей передачи.
+
+2-я роль должна иметь доступ, требующийся для простого сотрудника (просмотр не всей инф-ии, добавление, изменение, удаление – только того, что нужно для работы, выполнение ограниченного набора процедур и функции).
+
+Включить 2-х пользователей, предварительно созданных для каждого студента администратором БД (User_<ваш логин>, User1_<ваш логин>, Пароль - 1234567),  в эти роли и проверить, что права ролей выполняются для каждого пользователя (для этого под каждым пользователем подключиться к БД).
+
+Необходимо уметь предоставлять права на объекты любого типа, отзывать выданные права, давать полный запрет на выполнение некоторых действий. (через команды T-SQL и интерфейс SQL Server Management Studio (SSMS) )
+
+**Задание 2.**
+
+Выполнить маскирование некоторых поле Ваших таблиц  2-мя различными методами. 
+
+1. `ALTER COLUMN LastName ADD MASKED WITH (FUNCTION = 'partial(2,"xxxx",0)')`
+2. Используя механизмы представлений, хранимых процедур и функций.
+
+Члены 1 роли должны видеть оригинальные данные, члены 2 роли маскированные.
+
+<details>
+	<summary>В качестве отчета по этой ЛР предоставить скрипт, выполняющий эти действия.</summary>
+<pre><code>USE [master]
+GO
+--
+-- Создание логинов
+CREATE LOGIN [User_k.viharev] WITH PASSWORD = '1234567', DEFAULT_DATABASE = [Library], CHECK_EXPIRATION = OFF
+CREATE LOGIN [User1_k.viharev] WITH PASSWORD = '1234567', DEFAULT_DATABASE = [Library], CHECK_EXPIRATION = OFF
+GO
+--
+USE [Library]
+GO
+--
+-- Создание пользователей в базе данных
+CREATE USER [User_k.viharev] FOR LOGIN [User_k.viharev]
+CREATE USER [User1_k.viharev] FOR LOGIN [User1_k.viharev]
+GO
+--
+-- Создание ролей
+CREATE ROLE [Director] -- Роль руководителя
+CREATE ROLE [Employee] -- Роль сотрудника
+GO
+--
+-- Предоставление прав на таблицы
+GRANT SELECT, INSERT, UPDATE ON [dbo].[Авторы] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE ON [dbo].[Издательства] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE, DELETE ON [dbo].[Книги] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE, DELETE ON [dbo].[Список_авторов] TO [Director] WITH GRANT OPTION
+GRANT SELECT, UPDATE ON [dbo].[Выдача_книг] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE ON [dbo].[Группы] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE, DELETE ON [dbo].[Список_тем] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE ON [dbo].[Темы] TO [Director] WITH GRANT OPTION
+GRANT SELECT, INSERT, UPDATE ON [dbo].[Читатели] TO [Director] WITH GRANT OPTION
+--
+-- Права на представления
+GRANT SELECT ON [dbo].[Стоимость_книг_каждого_автора] TO [Director] WITH GRANT OPTION
+GRANT SELECT ON [dbo].[Автор_книги_дороже_200] TO [Director] WITH GRANT OPTION
+--
+-- Право создавать процедуры и функции
+-- GRANT CREATE PROCEDURE TO [Director]
+-- GRANT CREATE FUNCTION TO [Director]
+--
+-- Право на выполнение всех хранимых процедур (если они будут созданы)
+GRANT EXECUTE TO [Director]
+--
+-- Ограниченные права на просмотр
+GRANT SELECT ON [dbo].[Книги] TO [Employee]
+GRANT SELECT ON [dbo].[Авторы] TO [Employee]
+GRANT SELECT ON [dbo].[Издательства] TO [Employee]
+GRANT SELECT ON [dbo].[Темы] TO [Employee]
+GRANT SELECT ON [dbo].[Список_авторов] TO [Employee]
+GRANT SELECT ON [dbo].[Список_тем] TO [Employee]
+GRANT SELECT ON [dbo].[Читатели] TO [Employee]
+--
+-- Права на выданные книги (полный доступ для работы)
+GRANT SELECT, INSERT, UPDATE ON [dbo].[Выдача_книг] TO [Employee]
+--
+-- Права на представления
+GRANT SELECT ON [dbo].[Стоимость_книг_каждого_автора] TO [Employee]
+GRANT SELECT ON [dbo].[Автор_книги_дороже_200] TO [Employee]
+--
+-- [User_k.viharev] получает роль руководителя
+ALTER ROLE [Director] ADD MEMBER [User_k.viharev]
+--
+-- [User1_k.viharev] получает роль сотрудника
+ALTER ROLE [Employee] ADD MEMBER [User1_k.viharev]
+GO
+--
+-- Отзыв права DELETE на таблицу Книги у сотрудника
+-- REVOKE DELETE ON [dbo].[Книги] FROM [Employee]
+--
+-- Отзыв права UPDATE на все таблицы у сотрудника
+-- REVOKE UPDATE FROM [Employee]
+--
+-- Полный запрет на доступ к таблице Читатели для сотрудника
+-- DENY SELECT ON [dbo].[Читатели] TO [Employee]
+--
+-- Запрет на изменение схемы для сотрудника
+-- DENY ALTER ON SCHEMA::[dbo] TO [Employee]
+--
+-- Просмотр назначенных прав
+SELECT 
+    r.name AS RoleName,
+    u.name AS UserName
+FROM sys.database_role_members rm
+JOIN sys.database_principals r ON rm.role_principal_id = r.principal_id
+JOIN sys.database_principals u ON rm.member_principal_id = u.principal_id
+WHERE r.name IN ('Director', 'Employee')
+--
+-- Просмотр разрешений для ролей
+SELECT 
+    class_desc,
+    OBJECT_NAME(major_id) AS ObjectName,
+    permission_name,
+    state_desc,
+    grantor_principal_id,
+    grantee_principal_id
+FROM sys.database_permissions
+WHERE grantee_principal_id IN (
+    SELECT principal_id FROM sys.database_principals 
+    WHERE name IN ('Director', 'Employee')
+)
+ORDER BY grantee_principal_id, ObjectName
+--
+-- Маскируем
+ALTER TABLE [dbo].[Читатели]
+ALTER COLUMN [Имя] ADD MASKED WITH (FUNCTION = 'partial(1,"XXX",0)')
+--
+ALTER TABLE [dbo].[Читатели]
+ALTER COLUMN [Отчество] ADD MASKED WITH (FUNCTION = 'default()')
+--
+GRANT UNMASK TO [Director]
+GO
+--
+-- Функция для генерации фейковых фамилий
+CREATE OR ALTER FUNCTION [dbo].[Фейковые_фамилии](@real VARCHAR(100))
+RETURNS VARCHAR(100)
+AS
+BEGIN
+    DECLARE @FakeNamesTable TABLE (id INT IDENTITY(1,1), fake VARCHAR(100))
+    --
+    INSERT INTO @FakeNamesTable
+    VALUES
+    ('Иванов'), ('Петров'), ('Сидоров'), ('Кузнецов'), ('Попов'),
+    ('Соколов'), ('Лебедев'), ('Козлов'), ('Новиков'), ('Морозов'),
+    ('Волков'), ('Соловьев'), ('Васильев'), ('Зайцев'), ('Павлов'),
+    ('Семенов'), ('Голубев'), ('Виноградов'), ('Богданов'), ('Воробьев'),
+    ('Федоров'), ('Михайлов'), ('Беляев'), ('Тарасов'), ('Белов'),
+    ('Комаров'), ('Орлов'), ('Киселев'), ('Макаров'), ('Андреев')
+    --
+    RETURN (SELECT fake FROM @FakeNamesTable 
+           WHERE id = ABS(CHECKSUM(@real)) % (SELECT COUNT(*) FROM @FakeNamesTable) + 1)
+END
+GO
+--
+CREATE VIEW [dbo].[Маска_Читатели] 
+AS
+SELECT
+    [Id],
+	[dbo].[Фейковые_фамилии]([Фамилия]) AS [Фамилия],
+	[Имя],
+	[Отчество],
+	[Задолженность],
+	[Id_группы]
+FROM [dbo].[Читатели]
+GO
+--
+GRANT SELECT ON [dbo].[Маска_Читатели] TO [Employee]
+DENY SELECT ON [dbo].[Читатели] TO [Employee]
+--
+EXECUTE AS USER = 'User_k.viharev'
+SELECT * FROM [dbo].[Читатели]
+REVERT
+--
+EXECUTE AS USER = 'User1_k.viharev'
+SELECT * FROM [dbo].[Маска_Читатели]
+REVERT</code></pre>
+</details>
+Работа сдается очно.
+
 
 # <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab6
 [Назад](#content)
@@ -1044,8 +1225,7 @@ GO</code></pre>
 	<li>
 		<details>
 			<summary>Запросы из задания 3.2 к двум моделям(реляционная, графовая.)</summary> 
-			<ol type="a">
-				<li>Найти самые популярные издания
+			a) Найти самые популярные издания
 <pre><code>SELECT TOP 10 WITH TIES
     kn.Название AS Книга,
     iz.Название AS Издательство,
@@ -1063,8 +1243,7 @@ GROUP BY
     kn.Id, kn.Название, iz.Название
 ORDER BY 
     Всего_экземпляров_выдано DESC, Количество_выдач DESC;</code></pre>
-				</li>
-				<li>Найти темы, по которым все экземпляры книг находятся на руках
+			b) Найти темы, по которым все экземпляры книг находятся на руках
 <pre><code>SELECT DISTINCT
     t.Название
 FROM 
@@ -1092,8 +1271,7 @@ WHERE
                 ISNULL(SUM(vk2.Количество), 0) = k2.Число_экземпляров
         ) AS subq
     );</code></pre>
-				</li>
-				<li>Составить список книг по указанной теме
+			c) Составить список книг по указанной теме
 <pre><code>SELECT DISTINCT
     kn.Название
 FROM 
@@ -1103,8 +1281,7 @@ FROM
 WHERE 
     t.Название LIKE 'Детектив' AND
     MATCH(t<-(kt)-kn);</code></pre>
-				</li>
-				<li>Составить список должников, у которых срок долга > 1 месяца (ФИО, шифр, автор, название, дата сдачи), отсортировать по убыванию срока долга (т.е., в начале – самые злостные должники)
+			d) Составить список должников, у которых срок долга > 1 месяца (ФИО, шифр, автор, название, дата сдачи), отсортировать по убыванию срока долга (т.е., в начале – самые злостные должники)
 <pre><code>SELECT 
     h.Id,
     CONCAT(h.Фамилия, ' ', h.Имя, ' ', ISNULL(h.Отчество, '')) AS ФИО,
@@ -1125,8 +1302,7 @@ GROUP BY
     h.Id, h.Фамилия, h.Имя, h.Отчество, kn.Название, vk.Дата_предполагаемой_сдачи
 ORDER BY 
     DATEDIFF(DAY, vk.Дата_предполагаемой_сдачи, GETDATE()) DESC;</code></pre>
-				</li>
-				<li>Для каждой учебной группы выдать количество книг, взятых с начала текущего года, количество должников
+			e) Для каждой учебной группы выдать количество книг, взятых с начала текущего года, количество должников
 <pre><code>SELECT 
     g.Название,
     ISNULL(SUM(vk.Количество), 0) + ISNULL(SUM(s.Количество_книг), 0) AS Количество_книг,
