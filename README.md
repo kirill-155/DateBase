@@ -877,3 +877,292 @@ GO</code></pre></details>
 <h3>
   <a href="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Лабораторная%204.docx" target="_blank">Запросы лабораторной 4 (со скринами)</a>
 </h3>
+
+# <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab5
+[Назад](#content)
+
+## Лабораторная №5
+
+# <img src="https://github.com/user-attachments/assets/e080adec-6af7-4bd2-b232-d43cb37024ac" width="20" height="20"/> Lab6
+[Назад](#content)
+
+## Лабораторная №6
+### Создание графовых таблиц и работа с ними.
+Используйте реляционную БД из лабораторной работы №2.
+Продумайте и создайте графовые таблицы по реляционной БД, заполните графовые таблицы используя данные в реляционных таблицах.
+Напишите запросы из задания 3.2 используя паттерн <code>MATCH</code>.
+Сравните полученные результаты  с  результатами запросов к реляционной модели. 
+
+Отчет предоставить в виде:
+<ol type="1"> 
+	<li>
+		<details>
+			<summary>Схема узлов и ребер</summary><img alt="Схема узлов и ребер" src="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Схема узлов и ребер.png">
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>Скрипт для создания и заполнения графовых таблиц</summary> 
+<pre><code>USE [Library]
+GO
+--
+CREATE TABLE Авторы_Node(
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Псевдоним nvarchar(50),
+    Фамилия nvarchar(50),
+    Имя nvarchar(50),
+    Отчество nvarchar(50)
+) AS NODE;
+--
+CREATE TABLE Темы_Node(
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Название nvarchar(50) NOT NULL
+) AS NODE;
+--
+CREATE TABLE Издательства_Node(
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Название nvarchar(50) NOT NULL
+) AS NODE;
+--
+CREATE TABLE Группы_Node(
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Название nvarchar(50) NOT NULL
+) AS NODE;
+--
+CREATE TABLE Читатели_Node(
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Фамилия nvarchar(50) NOT NULL,
+    Имя nvarchar(50) NOT NULL,
+    Отчество nvarchar(50),
+    Задолженность money CHECK (Задолженность >= 0)
+) AS NODE;
+--
+CREATE TABLE Книги_Node(
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Название nvarchar(50) NOT NULL,
+    Цена money CHECK (Цена >= 0) NOT NULL,
+    Год_издания date NOT NULL,
+    Число_экземпляров int CHECK (Число_экземпляров >= 0) NOT NULL
+) AS NODE;
+--
+CREATE TABLE Книга_Тема_Edge AS EDGE;
+CREATE TABLE Книга_Автор_Edge AS EDGE;
+CREATE TABLE Выдача_Книги_Edge (
+    Id int PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    Количество int CHECK (Количество >= 0) NOT NULL,
+    Дата_выдачи date NOT NULL,
+    Дата_предполагаемой_сдачи date NOT NULL,
+    Дата_фактической_сдачи date,
+    Штраф money CHECK (Штраф >= 0)
+) AS EDGE;
+CREATE TABLE Читатель_в_Группе_Edge AS EDGE;
+CREATE TABLE Книга_Издательство_Edge AS EDGE;
+--Заполнение вершин
+SET IDENTITY_INSERT Авторы_Node ON
+GO
+INSERT INTO Авторы_Node (Id, Псевдоним, Фамилия, Имя, Отчество)
+SELECT Id, Псевдоним, Фамилия, Имя, Отчество FROM [Library].dbo.Авторы;
+SET IDENTITY_INSERT Авторы_Node OFF
+GO
+--
+SET IDENTITY_INSERT Издательства_Node ON
+GO
+INSERT INTO Издательства_Node (Id, Название)
+SELECT Id, Название FROM [Library].dbo.Издательства;
+SET IDENTITY_INSERT Издательства_Node OFF
+GO
+--
+SET IDENTITY_INSERT Книги_Node ON
+GO
+INSERT INTO Книги_Node (Id, Название, Цена, Год_издания, Число_экземпляров)
+SELECT Id, Название, Цена, Год_издания, Число_экземпляров FROM [Library].dbo.Книги;
+SET IDENTITY_INSERT Книги_Node OFF
+GO
+--
+SET IDENTITY_INSERT Темы_Node ON
+GO
+INSERT INTO Темы_Node (Id, Название)
+SELECT Id, Название FROM [Library].dbo.Темы;
+SET IDENTITY_INSERT Темы_Node OFF
+GO
+--
+SET IDENTITY_INSERT Группы_Node ON
+GO
+INSERT INTO Группы_Node (Id, Название)
+SELECT Id, Название FROM [Library].dbo.Группы;
+SET IDENTITY_INSERT Группы_Node OFF
+GO
+--
+SET IDENTITY_INSERT Читатели_Node ON
+GO
+INSERT INTO Читатели_Node (Id, Фамилия, Имя, Отчество, Задолженность)
+SELECT Id, Фамилия, Имя, Отчество, Задолженность FROM [Library].dbo.Читатели;
+SET IDENTITY_INSERT Читатели_Node OFF
+GO
+--Заполнение рёбер
+INSERT INTO Книга_Тема_Edge ($from_id, $to_id)
+SELECT 
+    (SELECT $node_id FROM Книги_Node WHERE Id = st.Id_книги),
+    (SELECT $node_id FROM Темы_Node WHERE Id = st.Id_темы)
+FROM [Library].dbo.Список_тем AS st;
+--
+INSERT INTO Книга_Автор_Edge ($from_id, $to_id)
+SELECT 
+    (SELECT $node_id FROM Книги_Node WHERE Id = sa.Id_книги),
+    (SELECT $node_id FROM Авторы_Node WHERE Id = sa.Id_автора)
+FROM [Library].dbo.Список_авторов AS sa;
+--
+INSERT INTO Книга_Издательство_Edge ($from_id, $to_id)
+SELECT 
+    (SELECT $node_id FROM Книги_Node WHERE Id = k.Id),
+    (SELECT $node_id FROM Издательства_Node WHERE Id = k.Id_издательства)
+FROM [Library].dbo.Книги AS k;
+--
+INSERT INTO Читатель_в_Группе_Edge ($from_id, $to_id)
+SELECT 
+    (SELECT $node_id FROM Читатели_Node WHERE Id = c.Id),
+    (SELECT $node_id FROM Группы_Node WHERE Id = c.Id_группы)
+FROM [Library].dbo.Читатели AS c;
+--
+SET IDENTITY_INSERT Выдача_Книги_Edge ON
+GO
+INSERT INTO Выдача_Книги_Edge ($from_id, $to_id, Id, Количество, Дата_выдачи, Дата_предполагаемой_сдачи, Дата_фактической_сдачи, Штраф)
+SELECT 
+    (SELECT $node_id FROM Читатели_Node WHERE Id = vk.Id_читателя),
+    (SELECT $node_id FROM Книги_Node WHERE Id = vk.Id_книги),
+    vk.Id,
+    vk.Количество,
+    vk.Дата_выдачи,
+    vk.Дата_предполагаемой_сдачи,
+    vk.Дата_фактической_сдачи,
+    vk.Штраф
+FROM [Library].dbo.Выдача_книг AS vk;
+SET IDENTITY_INSERT Выдача_Книги_Edge OFF
+GO</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>Запросы из задания 3.2 к двум моделям(реляционная, графовая.)</summary> 
+			<ol type="a">
+				<li>Найти самые популярные издания
+<pre><code>SELECT TOP 10 WITH TIES
+    kn.Название AS Книга,
+    iz.Название AS Издательство,
+    COUNT(vk.Id) AS Количество_выдач,
+    SUM(vk.Количество) AS Всего_экземпляров_выдано
+FROM 
+    Книги_Node kn,
+    Издательства_Node iz,
+    Книга_Издательство_Edge ki,
+    Выдача_Книги_Edge vk,
+    Читатели_Node h
+WHERE 
+    MATCH(kn-(ki)->iz AND kn<-(vk)-h)
+GROUP BY 
+    kn.Id, kn.Название, iz.Название
+ORDER BY 
+    Всего_экземпляров_выдано DESC, Количество_выдач DESC;</code></pre>
+				</li>
+				<li>Найти темы, по которым все экземпляры книг находятся на руках
+<pre><code>SELECT DISTINCT
+    t.Название
+FROM 
+    Темы_Node t,
+    Книги_Node k,
+    Книга_Тема_Edge kt
+WHERE 
+    MATCH(t<-(kt)-k)
+    AND EXISTS (
+        SELECT 1
+        FROM (
+            SELECT 
+                k2.Id,
+                k2.Число_экземпляров,
+                ISNULL(SUM(vk2.Количество), 0) AS Всего_выдано
+            FROM 
+                Книги_Node k2
+            LEFT JOIN 
+                Выдача_Книги_Edge vk2 ON vk2.$to_id = k2.$node_id AND vk2.Дата_фактической_сдачи IS NULL
+            WHERE 
+                k2.Id = k.Id
+            GROUP BY 
+                k2.Id, k2.Число_экземпляров
+            HAVING 
+                ISNULL(SUM(vk2.Количество), 0) = k2.Число_экземпляров
+        ) AS subq
+    );</code></pre>
+				</li>
+				<li>Составить список книг по указанной теме
+<pre><code>SELECT DISTINCT
+    kn.Название
+FROM 
+    Темы_Node t,
+    Книги_Node kn,
+    Книга_Тема_Edge kt
+WHERE 
+    t.Название LIKE 'Детектив' AND
+    MATCH(t<-(kt)-kn);</code></pre>
+				</li>
+				<li>Составить список должников, у которых срок долга > 1 месяца (ФИО, шифр, автор, название, дата сдачи), отсортировать по убыванию срока долга (т.е., в начале – самые злостные должники)
+<pre><code>SELECT 
+    h.Id,
+    CONCAT(h.Фамилия, ' ', h.Имя, ' ', ISNULL(h.Отчество, '')) AS ФИО,
+    STRING_AGG(CONCAT(a.Фамилия, ' ', a.Имя, ' ', ISNULL(a.Отчество, '')), ', ') AS Автор,
+    kn.Название,
+    vk.Дата_предполагаемой_сдачи
+FROM 
+    Авторы_Node a,
+    Книги_Node kn,
+    Читатели_Node h,
+    Книга_Автор_Edge ka,
+    Выдача_Книги_Edge vk
+WHERE 
+    MATCH(a<-(ka)-kn<-(vk)-h) AND
+    vk.Дата_фактической_сдачи IS NULL AND
+    DATEDIFF(MONTH, vk.Дата_предполагаемой_сдачи, GETDATE()) > 1
+GROUP BY 
+    h.Id, h.Фамилия, h.Имя, h.Отчество, kn.Название, vk.Дата_предполагаемой_сдачи
+ORDER BY 
+    DATEDIFF(DAY, vk.Дата_предполагаемой_сдачи, GETDATE()) DESC;</code></pre>
+				</li>
+				<li>Для каждой учебной группы выдать количество книг, взятых с начала текущего года, количество должников
+<pre><code>SELECT 
+    g.Название,
+    ISNULL(SUM(vk.Количество), 0) + ISNULL(SUM(s.Количество_книг), 0) AS Количество_книг,
+    ISNULL(COUNT(DISTINCT CASE WHEN vk.Дата_фактической_сдачи IS NULL AND vk.Дата_предполагаемой_сдачи < GETDATE() THEN h.Id END) + SUM(s.Количество_должников), 0) AS Количество_должников
+FROM 
+    Группы_Node g
+LEFT JOIN 
+    Читатель_в_Группе_Edge cg ON cg.$from_id = g.$node_id
+LEFT JOIN 
+    Читатели_Node h ON cg.$to_id = h.$node_id
+LEFT JOIN 
+    Выдача_Книги_Edge vk ON vk.$from_id = h.$node_id AND vk.Дата_выдачи > '2025-09-01'
+LEFT JOIN
+    (SELECT 
+        g.Название,
+        ISNULL(SUM(vk.Количество), 0) AS Количество_книг,
+        COUNT(DISTINCT CASE WHEN vk.Дата_фактической_сдачи IS NULL AND vk.Дата_предполагаемой_сдачи < GETDATE() THEN h.Id END) AS Количество_должников
+    FROM 
+        Группы_Node g,
+        Читатели_Node h,
+        Выдача_Книги_Edge vk,
+        Читатель_в_Группе_Edge cg,
+        Книги_Node k
+    WHERE 
+        MATCH(g<-(cg)-h-(vk)->k) AND
+        vk.Дата_выдачи > '2025-09-01'
+    GROUP BY 
+    g.Id, g.Название) AS s ON g.Название = s.Название
+GROUP BY 
+    g.Id, g.Название;</code></pre>
+				</li>
+			</ol>
+		</details>
+	</li>
+</ol>
+
+<h3>
+  <a href="https://github.com/kirill-155/DateBase/blob/main/Ресурсы/Лабораторная%206.docx" target="_blank">Запросы лабораторной 6 (со скринами)</a>
+</h3>
